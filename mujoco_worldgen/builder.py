@@ -5,9 +5,9 @@ from copy import deepcopy as copy
 import numpy as np
 from mujoco_py import const, load_model_from_xml, MjSim
 
-from mujoco_worldgen.util.path import worldgen_path
 from mujoco_worldgen.objs.obj import Obj
 from mujoco_worldgen.parser import unparse_dict, update_mujoco_dict
+from mujoco_worldgen.util.path import worldgen_path
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ class WorldBuilder(Obj):
         xinit_dict = self.to_xinit()
         udd_callbacks = self.to_udd_callback()
         xml = unparse_dict(xml_dict)
-
+        print(xml)
         model = load_model_from_xml(xml)
         sim = MjSim(model, nsubsteps=self.world_params.num_substeps)
         for name, value in xinit_dict.items():
@@ -93,6 +93,7 @@ class WorldBuilder(Obj):
                 for udd_callback in udd_callbacks:
                     ret.update(udd_callback(sim))
                 return ret
+
             sim.udd_callback = merged_udd_callback
         return sim
 
@@ -100,4 +101,4 @@ class WorldBuilder(Obj):
 class FullVirtualWorldException(Exception):
     def __init__(self, msg=''):
         Exception.__init__(self, "Virtual world is full of objects. " +
-                                 "Cannot allocate more of them. " + msg)
+                           "Cannot allocate more of them. " + msg)

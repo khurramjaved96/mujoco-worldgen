@@ -1,7 +1,9 @@
-from mujoco_worldgen.util.types import store_args
-from mujoco_worldgen.objs.obj import Obj
-import numpy as np
 from collections import OrderedDict
+
+import numpy as np
+
+from mujoco_worldgen.objs.obj import Obj
+from mujoco_worldgen.util.types import store_args
 
 
 class Floor(Obj):
@@ -11,6 +13,7 @@ class Floor(Obj):
     Placement is calculated in a fixed position, and encoded in XML,
         as opposed to in qpos, which other objects use.
     '''
+
     @store_args
     def __init__(self, geom_type='plane'):
         super(Floor, self).__init__()
@@ -26,6 +29,8 @@ class Floor(Obj):
         pos = self.absolute_position
         pos[0] += self.size[0] / 2.0
         pos[1] += self.size[1] / 2.0
+        # pos[2] = 2
+        print("Position =", pos)
         geom = OrderedDict()
 
         geom['@name'] = self.name
@@ -33,6 +38,7 @@ class Floor(Obj):
         if self.geom_type == 'box':
             geom['@size'] = np.array([self.size[0] / 2.0, self.size[1] / 2.0, 0.000001])
             geom['@type'] = 'box'
+
         elif self.geom_type == 'plane':
             geom['@size'] = np.array([self.size[0] / 2.0, self.size[1] / 2.0, 1.0])
             geom['@type'] = 'plane'
@@ -40,6 +46,7 @@ class Floor(Obj):
             raise ValueError("Invalid geom_type: " + self.geom_type)
         geom['@condim'] = 3
         geom['@name'] = self.name
+        geom['@material'] = "MatPlane"
 
         # body is necessary to place sites.
         body = OrderedDict()
@@ -48,6 +55,26 @@ class Floor(Obj):
 
         worldbody = OrderedDict([("geom", [geom]),
                                  ("body", [body])])
+        material = OrderedDict()
+        material["@name"] = "MatPlane"
+        material["@reflectance"] = "0.5"
+        material["@texture"] = "texplane"
+        material["@texrepeat"] = "1 1"
+        material["@texuniform"] = "true"
 
-        xml_dict = OrderedDict(worldbody=worldbody)
+        material2 = OrderedDict()
+        material2["@name"] = "texplane"
+        material2["@type"] = "2d"
+        material2["@builtin"] = "checker"
+        material2["@rgb1"] = ".2 .3 .4"
+        material2["@rgb2"] = ".1 0.15 0.2"
+        material2["@width"] = "512"
+        material2["@height"] = "512"
+
+        assets = OrderedDict([('texture', [material2]),
+                                          ('material', [material])])
+        # print(assets)
+        # 0/0
+        xml_dict = OrderedDict(asset=assets, worldbody=worldbody)
+        xml_dict
         return xml_dict

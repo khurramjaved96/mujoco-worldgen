@@ -3,11 +3,11 @@ from collections import OrderedDict
 
 import numpy as np
 
-from mujoco_worldgen.util.types import accepts, returns
 from mujoco_worldgen.parser import update_mujoco_dict
 from mujoco_worldgen.transforms import closure_transform
 from mujoco_worldgen.util.obj_util import get_name_index, get_axis_index
 from mujoco_worldgen.util.placement import place_boxes
+from mujoco_worldgen.util.types import accepts, returns
 
 
 class Obj(object):
@@ -50,7 +50,6 @@ class Obj(object):
         # Invoked functions:
         #  - generate_name (non recursive function. Can be overriden).
         #  - to_names (recursive function)
-
 
         # ####################
         # ### Third Phase ####
@@ -406,11 +405,11 @@ class Obj(object):
 
         if len(self.markers) > 0:
             bodies = [body for body in self.xml_dict["worldbody"]
-                      ["body"] if "annotation" not in body["@name"] and
-                                  ("@mocap" not in body or not body["@mocap"])]
+            ["body"] if "annotation" not in body["@name"] and
+                      ("@mocap" not in body or not body["@mocap"])]
             assert len(bodies) == 1, ("Object %s should have only one body " % self) + \
-                "to attach markers to. Otherwise mark() is" + \
-                "ambiguous."
+                                     "to attach markers to. Otherwise mark() is" + \
+                                     "ambiguous."
             body = bodies[0]
             if "site" not in body:
                 body["site"] = []
@@ -431,6 +430,7 @@ class Obj(object):
                 if "geom" in node:
                     for g in node["geom"]:
                         g["@material"] = self._material.name
+
             closure_transform(assign_material)(self.xml_dict)
 
         update_mujoco_dict(full_xml_dict, self.xml_dict)

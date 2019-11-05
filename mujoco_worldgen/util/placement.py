@@ -21,7 +21,7 @@ def place_boxes(random_state, boxes, width, height, placement_margin=0.0):
     sizes = [box["size"] for box in boxes]
     for s in sizes:
         if s[0] > width - 2 * placement_margin or s[0] <= 0.0 or \
-           s[1] > height - 2 * placement_margin or s[1] <= 0.0:
+                s[1] > height - 2 * placement_margin or s[1] <= 0.0:
             return None
         area += (s[0] + placement_margin // 2) * (s[1] + placement_margin // 2)
     if area > 0.6 * (width - placement_margin) * (height - placement_margin) and len(sizes) > 1:
@@ -38,7 +38,7 @@ def place_boxes(random_state, boxes, width, height, placement_margin=0.0):
                 if box["placement_xy"] is not None:
                     xy[idx] = box["placement_xy"][0] * (width - box["size"][0])
                     xy[idx + len(sizes)] = box["placement_xy"][1] * \
-                        (height - box["size"][1])
+                                           (height - box["size"][1])
                     for i in [idx, idx + len(sizes)]:
                         a = np.zeros(2 * len(sizes))
                         a[i] = 1.0
@@ -64,6 +64,7 @@ def place_boxes(random_state, boxes, width, height, placement_margin=0.0):
         best_violated = [True for _ in range(100)]
         for _ in range(10):
             xy = _get_random_xy(random_state, boxes, width, height, placement_margin)
+            # print(xy)
             a_eq, b_eq, a_pairwise, b_pairwise, violated = get_matrices(xy)
             if sum(violated) < sum(best_violated):
                 best_xy = xy
@@ -147,11 +148,11 @@ def _further_randomize(random_state, boxes, a, b, xy):
             elif np.abs(a[i][j] + 1.) < 1e-4:
                 slack[1][j] = max(
                     min(sol_slack[i], slack[1][j]) / row, 0)
-    assert((slack[0][:] <= slack[1][:]).all())
+    assert ((slack[0][:] <= slack[1][:]).all())
     dim = xy.shape[0] // 2
-    for i in range(xy.shape[0]):
-        if boxes[i % dim]["placement_xy"] is None:
-            xy[i] += random_state.uniform(slack[0][i], slack[1][i])
+    # for i in range(xy.shape[0]):
+    #     if boxes[i % dim]["placement_xy"] is None:
+    #         xy[i] += random_state.uniform(slack[0][i], slack[1][i])
     return [(a, b) for a, b in zip(xy[:dim], xy[dim:])]
 
 

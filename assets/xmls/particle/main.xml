@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mujoco>
-	<option timestep="0.005"/>
-	<worldbody>
-		<body name="particle" pos="0.15 0.15 0.15">
-			<joint axis="1 0 0" damping="0.1" name="slide0" pos="0 0 0" type="slide"></joint>
-			<joint axis="0 1 0" damping="0.1" name="slide1" pos="0 0 0" type="slide"></joint>
-			<joint axis="0 0 1" damping="10000" name="slide2" pos="0 0 0" type="slide"></joint>
-			<geom name="sphere" mass="1" pos="0 0 0" rgba="1 0 0 1" size="0.15" type="sphere" euler="1.57 0 0"></geom>
-			<!-- <camera euler="0 0 0" fovy="40" name="rgb" pos="0 0 2.5"></camera> -->
-		</body>
-		<body name="annotation:outer_bound" pos="0.15 0.15 0.15">
-			<geom conaffinity="0" contype="0" mass="0" pos="0 0 0" rgba="0.417 0.7203 0.0001 0.0" size="0.0001 0.0001 0.0001" type="box"></geom>
-		</body>
-	</worldbody>
-	<actuator>
-		<motor gear="100" joint="slide0"></motor>
-		<motor gear="100" joint="slide1"></motor>
-	</actuator>
+    <option timestep="0.005"/>
+
+    <worldbody>
+        <!--<light directional='false' pos='0 0 20.0' dir='0 -.15 -1' ambient="0.5 0.5 0.5"/>-->
+        <light directional='true' pos='0 0 10.0' dir='0 0 -1' ambient="0.3 0.3 0.3"/>
+        <body name="particle" pos="0.15 0.15 0.15">
+            <joint axis="1 0 0" damping="0" frictionloss="0" name="slide0" pos="0 0 0" type="slide"></joint>
+            <joint axis="0 1 0" damping="0" frictionloss="0" name="slide1" pos="0 0 0" type="slide"></joint>
+            <joint axis="0 0 1" damping="0" frictionloss="0" name="slide2" pos="0 0 0" type="slide"></joint>
+            <joint axis="1 0 0" damping="0" frictionloss="0" name="hinge0" pos="0 0 0" type="hinge"></joint>
+            <joint axis="0 1 0" damping="0" frictionloss="0" name="hinge1" pos="0 0 0" type="hinge"></joint>
+            <joint axis="0 0 1" damping="0" frictionloss="0" name="hinge2" pos="0 0 0" type="hinge"></joint>
+
+            <geom name="sphere" mass="1" pos="0 0 0" rgba="1 0 0 1" size="0.15" type="sphere"></geom>
+            <!-- <camera euler="0 0 0" fovy="40" name="rgb" pos="0 0 2.5"></camera> -->
+        </body>
+        <body name="annotation:outer_bound" pos="0.15 0.15 0.15">
+            <geom conaffinity="0" contype="0" mass="0" pos="0 0 0" rgba="0.417 0.7203 0.0001 0.0"
+                  size="0.0001 0.0001 0.0001" type="box"></geom>
+        </body>
+    </worldbody>
+    <actuator>
+        <motor gear="30" joint="hinge0"></motor>
+        <motor gear="30" joint="hinge1"></motor>
+    </actuator>
 </mujoco>

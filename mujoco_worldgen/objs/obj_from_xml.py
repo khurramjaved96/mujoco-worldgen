@@ -108,6 +108,7 @@ class ObjFromXML(Obj):
                 slide['@pos'] = np.zeros(3)
                 body['joint'].append(slide)
                 joint_names.append(joint_name)
+        print (joint_names)
         return joint_names
 
     def generate_name(self, name_indexes):
